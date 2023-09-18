@@ -7,12 +7,6 @@ import { Post } from '@/domain/forum/enterprise/entities/post';
 export class InMemoryPostsRepository implements PostsRepository {
   public items: Post[] = [];
 
-  async exists(id: string) {
-    const post = this.items.find((item) => item.id.toString() === id);
-
-    return !!post;
-  }
-
   async findById(id: string) {
     const post = this.items.find((item) => item.id.toString() === id);
 

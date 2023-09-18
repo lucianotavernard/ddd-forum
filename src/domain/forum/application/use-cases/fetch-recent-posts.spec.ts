@@ -1,4 +1,4 @@
-import { FetchRecentPostsUseCase } from './fetch-recent-post';
+import { FetchRecentPostsUseCase } from './fetch-recent-posts';
 
 import { InMemoryPostsRepository } from 'test/repositories/in-memory-posts-repository';
 import { makePost } from 'test/factories/make-post';

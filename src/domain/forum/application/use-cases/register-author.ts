@@ -1,3 +1,5 @@
+import { Injectable } from '@nestjs/common';
+
 import { Either, left, right } from '@/core/either';
 
 import { Author } from '@/domain/forum/enterprise/entities/author';
@@ -9,7 +11,7 @@ import { InvalidEmailError } from '@/domain/forum/enterprise/entities/value-obje
 import { Username } from '@/domain/forum/enterprise/entities/value-objects/username';
 import { InvalidUsernameError } from '@/domain/forum/enterprise/entities/value-objects/errors/invalid-username-error';
 
-import { HashGenerator } from '@/domain/forum/application/cryptography/hash-generator';
+import { HashGenerator } from '@/domain/forum/application/providers/hash-generator';
 
 import { EmailAlreadyExistsError } from './errors/email-already-exists';
 import { UsernameAlreadyExistsError } from './errors/username-already-exists';
@@ -31,6 +33,7 @@ type RegisterAuthorUseCaseResponse = Either<
   }
 >;
 
+@Injectable()
 export class RegisterAuthorUseCase {
   constructor(
     private readonly authorsRepository: AuthorsRepository,

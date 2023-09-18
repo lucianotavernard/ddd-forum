@@ -1,3 +1,5 @@
+import { Injectable } from '@nestjs/common';
+
 import { Either, left, right } from '@/core/either';
 
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error';
@@ -15,6 +17,7 @@ type DeletePostCommentUseCaseResponse = Either<
   null
 >;
 
+@Injectable()
 export class DeletePostCommentUseCase {
   constructor(private postCommentsRepository: PostCommentsRepository) {}
 

@@ -1,5 +1,7 @@
-import { Either, left, right } from '@/core/either';
+import { Injectable } from '@nestjs/common';
+
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
+import { Either, left, right } from '@/core/either';
 
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error';
 
@@ -20,6 +22,7 @@ type CommentOnPostUseCaseResponse = Either<
   }
 >;
 
+@Injectable()
 export class CommentOnPostUseCase {
   constructor(
     private readonly postsRepository: PostsRepository,

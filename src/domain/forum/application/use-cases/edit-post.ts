@@ -1,10 +1,12 @@
+import { Injectable } from '@nestjs/common';
+
 import { Either, left, right } from '@/core/either';
 
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error';
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error';
 
 import { Post } from '@/domain/forum/enterprise/entities/post';
-import { PostsRepository } from '../repositories/posts-repository';
+import { PostsRepository } from '@/domain/forum/application/repositories/posts-repository';
 
 type EditPostUseCaseRequest = {
   authorId: string;
@@ -20,6 +22,7 @@ type EditPostUseCaseResponse = Either<
   }
 >;
 
+@Injectable()
 export class EditPostUseCase {
   constructor(private readonly postsRepository: PostsRepository) {}
 

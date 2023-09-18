@@ -1,8 +1,10 @@
+import { Injectable } from '@nestjs/common';
+
 import { Either, left, right } from '@/core/either';
 
 import { AuthorsRepository } from '@/domain/forum/application/repositories/authors-repository';
-import { HashComparer } from '@/domain/forum/application/cryptography/hash-comparer';
-import { Encrypter } from '@/domain/forum/application/cryptography/encrypter';
+import { HashComparer } from '@/domain/forum/application/providers/hash-comparer';
+import { Encrypter } from '@/domain/forum/application/providers/encrypter';
 
 import { WrongCredentialsError } from './errors/wrong-credentials-error';
 
@@ -18,6 +20,7 @@ type AuthenticateAuthorUseCaseResponse = Either<
   }
 >;
 
+@Injectable()
 export class AuthenticateAuthorUseCase {
   constructor(
     private readonly authorsRepository: AuthorsRepository,

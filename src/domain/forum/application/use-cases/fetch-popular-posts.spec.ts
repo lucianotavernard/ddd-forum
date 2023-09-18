@@ -1,4 +1,4 @@
-import { FetchPopularPostsUseCase } from './fetch-popular-post';
+import { FetchPopularPostsUseCase } from './fetch-popular-posts';
 
 import { InMemoryPostsRepository } from 'test/repositories/in-memory-posts-repository';
 import { makePost } from 'test/factories/make-post';

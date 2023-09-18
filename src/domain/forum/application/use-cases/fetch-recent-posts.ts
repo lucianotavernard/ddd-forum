@@ -1,3 +1,5 @@
+import { Injectable } from '@nestjs/common';
+
 import { Either, right } from '@/core/either';
 
 import { Post } from '@/domain/forum/enterprise/entities/post';
@@ -15,6 +17,7 @@ type FetchRecentPostsUseCaseResponse = Either<
   }
 >;
 
+@Injectable()
 export class FetchRecentPostsUseCase {
   constructor(private readonly postsRepository: PostsRepository) {}
 

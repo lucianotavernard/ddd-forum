@@ -1,3 +1,5 @@
+import { Injectable } from '@nestjs/common';
+
 import { Either, left, right } from '@/core/either';
 
 import { Author } from '@/domain/forum/enterprise/entities/author';
@@ -31,6 +33,7 @@ type EditAuthorUseCaseResponse = Either<
   }
 >;
 
+@Injectable()
 export class EditAuthorUseCase {
   constructor(private readonly authorsRepository: AuthorsRepository) {}
 

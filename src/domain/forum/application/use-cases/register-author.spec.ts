@@ -4,7 +4,7 @@ import { EmailAlreadyExistsError } from './errors/email-already-exists';
 import { UsernameAlreadyExistsError } from './errors/username-already-exists';
 
 import { InMemoryAuthorsRepository } from 'test/repositories/in-memory-authors-repository';
-import { FakeHasher } from 'test/cryptography/fake-hasher';
+import { FakeHasher } from 'test/providers/fake-hasher';
 import { makeAuthor } from 'test/factories/make-author';
 
 let inMemoryAuthorsRepository: InMemoryAuthorsRepository;
