@@ -5,18 +5,18 @@ import { faker } from '@faker-js/faker';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 
 import {
-  PostComment,
-  PostCommentProps,
-} from '@/domain/forum/enterprise/entities/post-comment';
+  Comment,
+  CommentProps,
+} from '@/domain/forum/enterprise/entities/comment';
 
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
-import { PrismaPostCommentMapper } from '@/infra/database/prisma/mappers/prisma-post-comment-mapper';
+import { PrismaCommentMapper } from '@/infra/database/prisma/mappers/prisma-comment-mapper';
 
-export function makePostComment(
-  override: Partial<PostCommentProps> = {},
+export function makeComment(
+  override: Partial<CommentProps> = {},
   id?: UniqueEntityID,
 ) {
-  const postComment = PostComment.create(
+  const comment = Comment.create(
     {
       authorId: new UniqueEntityID(),
       postId: new UniqueEntityID(),
@@ -26,20 +26,18 @@ export function makePostComment(
     id,
   );
 
-  return postComment;
+  return comment;
 }
 
 @Injectable()
-export class PostCommentFactory {
+export class CommentFactory {
   constructor(private readonly prisma: PrismaService) {}
 
-  async makePrismaPostComment(
-    data: Partial<PostCommentProps> = {},
-  ): Promise<PostComment> {
-    const comment = makePostComment(data);
+  async makePrismaComment(data: Partial<CommentProps> = {}): Promise<Comment> {
+    const comment = makeComment(data);
 
     await this.prisma.comment.create({
-      data: PrismaPostCommentMapper.toPrisma(comment),
+      data: PrismaCommentMapper.toPrisma(comment),
     });
 
     return comment;

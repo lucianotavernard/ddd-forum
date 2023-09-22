@@ -5,9 +5,9 @@ import { Either, left, right } from '@/core/either';
 
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error';
 
-import { PostComment } from '@/domain/forum/enterprise/entities/post-comment';
+import { Comment } from '@/domain/forum/enterprise/entities/comment';
 import { PostsRepository } from '@/domain/forum/application/repositories/posts-repository';
-import { PostCommentsRepository } from '@/domain/forum/application/repositories/post-comments-repository';
+import { CommentsRepository } from '@/domain/forum/application/repositories/comments-repository';
 
 type CommentOnPostUseCaseRequest = {
   authorId: string;
@@ -18,7 +18,7 @@ type CommentOnPostUseCaseRequest = {
 type CommentOnPostUseCaseResponse = Either<
   ResourceNotFoundError,
   {
-    postComment: PostComment;
+    comment: Comment;
   }
 >;
 
@@ -26,7 +26,7 @@ type CommentOnPostUseCaseResponse = Either<
 export class CommentOnPostUseCase {
   constructor(
     private readonly postsRepository: PostsRepository,
-    private readonly postCommentsRepository: PostCommentsRepository,
+    private readonly commentsRepository: CommentsRepository,
   ) {}
 
   async execute({
@@ -40,16 +40,16 @@ export class CommentOnPostUseCase {
       return left(new ResourceNotFoundError());
     }
 
-    const postComment = PostComment.create({
+    const comment = Comment.create({
       authorId: new UniqueEntityID(authorId),
       postId: new UniqueEntityID(postId),
       content,
     });
 
-    await this.postCommentsRepository.create(postComment);
+    await this.commentsRepository.create(comment);
 
     return right({
-      postComment,
+      comment,
     });
   }
 }

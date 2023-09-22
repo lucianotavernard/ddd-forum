@@ -3,21 +3,21 @@ import { CommentOnPostUseCase } from './comment-on-post';
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error';
 
 import { InMemoryPostsRepository } from 'test/repositories/in-memory-posts-repository';
-import { InMemoryPostCommentsRepository } from 'test/repositories/in-memory-post-comments-repository';
+import { InMemoryCommentsRepository } from 'test/repositories/in-memory-comments-repository';
 import { makePost } from 'test/factories/make-post';
 
 let inMemoryPostsRepository: InMemoryPostsRepository;
-let inMemoryPostCommentsRepository: InMemoryPostCommentsRepository;
+let inMemoryCommentsRepository: InMemoryCommentsRepository;
 let sut: CommentOnPostUseCase;
 
 describe('Comment on Post', () => {
   beforeEach(() => {
-    inMemoryPostCommentsRepository = new InMemoryPostCommentsRepository();
+    inMemoryCommentsRepository = new InMemoryCommentsRepository();
     inMemoryPostsRepository = new InMemoryPostsRepository();
 
     sut = new CommentOnPostUseCase(
       inMemoryPostsRepository,
-      inMemoryPostCommentsRepository,
+      inMemoryCommentsRepository,
     );
   });
 
@@ -32,7 +32,7 @@ describe('Comment on Post', () => {
       content: 'Comment test',
     });
 
-    expect(inMemoryPostCommentsRepository.items[0]).toMatchObject(
+    expect(inMemoryCommentsRepository.items[0]).toMatchObject(
       expect.objectContaining({
         createdAt: expect.any(Date),
         updatedAt: undefined,

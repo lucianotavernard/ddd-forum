@@ -9,14 +9,14 @@ import {
 } from '@/domain/notification/application/use-cases/send-notification';
 
 import { InMemoryPostsRepository } from 'test/repositories/in-memory-posts-repository';
-import { InMemoryPostCommentsRepository } from 'test/repositories/in-memory-post-comments-repository';
+import { InMemoryCommentsRepository } from 'test/repositories/in-memory-comments-repository';
 import { InMemoryNotificationsRepository } from 'test/repositories/in-memory-notifications-repository';
-import { makePostComment } from 'test/factories/make-post-comment';
+import { makeComment } from 'test/factories/make-comment';
 import { makePost } from 'test/factories/make-post';
 import { waitFor } from 'test/utils/wait-for';
 
 let inMemoryPostsRepository: InMemoryPostsRepository;
-let inMemoryPostCommentsRepository: InMemoryPostCommentsRepository;
+let inMemoryCommentsRepository: InMemoryCommentsRepository;
 let inMemoryNotificationsRepository: InMemoryNotificationsRepository;
 let sendNotificationUseCase: SendNotificationUseCase;
 
@@ -28,7 +28,7 @@ let sendNotificationExecuteSpy: SpyInstance<
 describe('On Comment Created', () => {
   beforeEach(() => {
     inMemoryPostsRepository = new InMemoryPostsRepository();
-    inMemoryPostCommentsRepository = new InMemoryPostCommentsRepository();
+    inMemoryCommentsRepository = new InMemoryCommentsRepository();
     inMemoryNotificationsRepository = new InMemoryNotificationsRepository();
     sendNotificationUseCase = new SendNotificationUseCase(
       inMemoryNotificationsRepository,
@@ -39,12 +39,12 @@ describe('On Comment Created', () => {
     new OnCommentCreated(inMemoryPostsRepository, sendNotificationUseCase);
   });
 
-  it.skip('should send a notification when a comment is created', async () => {
+  it('should send a notification when a comment is created', async () => {
     const post = makePost();
-    const comment = makePostComment({ postId: post.id });
+    const comment = makeComment({ postId: post.id });
 
     inMemoryPostsRepository.create(post);
-    inMemoryPostCommentsRepository.create(comment);
+    inMemoryCommentsRepository.create(comment);
 
     await waitFor(() => {
       expect(sendNotificationExecuteSpy).toHaveBeenCalled();

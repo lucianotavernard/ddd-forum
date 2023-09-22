@@ -5,8 +5,8 @@ import { PrismaService } from './prisma/prisma.service';
 import { PrismaPostsRepository } from './prisma/repositories/prisma-posts-repository';
 import { PostsRepository } from '@/domain/forum/application/repositories/posts-repository';
 
-import { PrismaPostCommentsRepository } from './prisma/repositories/prisma-post-comments-repository';
-import { PostCommentsRepository } from '@/domain/forum/application/repositories/post-comments-repository';
+import { PrismaCommentsRepository } from './prisma/repositories/prisma-comment-repository';
+import { CommentsRepository } from '@/domain/forum/application/repositories/comments-repository';
 
 import { PrismaAuthorsRepository } from './prisma/repositories/prisma-author-repository';
 import { AuthorsRepository } from '@/domain/forum/application/repositories/authors-repository';
@@ -19,8 +19,8 @@ import { AuthorsRepository } from '@/domain/forum/application/repositories/autho
       useClass: PrismaPostsRepository,
     },
     {
-      provide: PostCommentsRepository,
-      useClass: PrismaPostCommentsRepository,
+      provide: CommentsRepository,
+      useClass: PrismaCommentsRepository,
     },
     {
       provide: AuthorsRepository,
@@ -30,7 +30,7 @@ import { AuthorsRepository } from '@/domain/forum/application/repositories/autho
   exports: [
     PrismaService,
     PostsRepository,
-    PostCommentsRepository,
+    CommentsRepository,
     AuthorsRepository,
   ],
 })

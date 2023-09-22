@@ -1,19 +1,31 @@
-import { Entity } from '@/core/entities/entity';
+import { Optional } from '@/core/types/optional';
+
+import { AggregateRoot } from '@/core/entities/aggregate-root';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 
+import { CommentCreatedEvent } from '../events/comment-created-event';
+
 export type CommentProps = {
+  postId: UniqueEntityID;
   authorId: UniqueEntityID;
+  commentId?: UniqueEntityID;
   content: string;
   points: number;
   createdAt: Date;
   updatedAt?: Date;
 };
 
-export abstract class Comment<
-  Props extends CommentProps,
-> extends Entity<Props> {
+export class Comment extends AggregateRoot<CommentProps> {
+  get postId() {
+    return this.props.postId;
+  }
+
   get authorId() {
     return this.props.authorId;
+  }
+
+  get commentId() {
+    return this.props.commentId;
   }
 
   get content() {
@@ -43,5 +55,27 @@ export abstract class Comment<
 
   private touch() {
     this.props.updatedAt = new Date();
+  }
+
+  static create(
+    props: Optional<CommentProps, 'createdAt' | 'points'>,
+    id?: UniqueEntityID,
+  ) {
+    const comment = new Comment(
+      {
+        ...props,
+        points: props.points ?? 0,
+        createdAt: props.createdAt ?? new Date(),
+      },
+      id,
+    );
+
+    const isNewComment = !id;
+
+    if (isNewComment) {
+      comment.addDomainEvent(new CommentCreatedEvent(comment));
+    }
+
+    return comment;
   }
 }

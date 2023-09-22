@@ -2,7 +2,7 @@ import { DomainEvents } from '@/core/events/domain-events';
 import { EventHandler } from '@/core/events/event-handler';
 
 import { PostsRepository } from '@/domain/forum/application/repositories/posts-repository';
-import { PostCommentCreatedEvent } from '@/domain/forum/enterprise/events/post-comment-created-event';
+import { CommentCreatedEvent } from '@/domain/forum/enterprise/events/comment-created-event';
 import { SendNotificationUseCase } from '@/domain/notification/application/use-cases/send-notification';
 
 export class OnCommentCreated implements EventHandler {
@@ -16,22 +16,18 @@ export class OnCommentCreated implements EventHandler {
   setupSubscriptions(): void {
     DomainEvents.register(
       this.sendNewCommentNotification.bind(this),
-      PostCommentCreatedEvent.name,
+      CommentCreatedEvent.name,
     );
   }
 
-  private async sendNewCommentNotification({
-    postComment,
-  }: PostCommentCreatedEvent) {
-    const post = await this.postRepository.findById(
-      postComment.postId.toString(),
-    );
+  private async sendNewCommentNotification({ comment }: CommentCreatedEvent) {
+    const post = await this.postRepository.findById(comment.postId.toString());
 
     if (post) {
       await this.sendNotification.execute({
         recipientId: post.authorId.toString(),
         title: `New comment on "${post.title.substring(0, 40).concat('...')}"`,
-        content: postComment.excerpt,
+        content: comment.excerpt,
       });
     }
   }
