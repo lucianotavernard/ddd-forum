@@ -18,6 +18,7 @@ model User {
   password String
 
   posts    Post[]
+  votes    Vote[]
   comments Comment[]
 
   @@map("users")
@@ -35,6 +36,7 @@ model Post {
   publishedAt DateTime  @map("published_at")
 
   author   User      @relation(fields: [authorId], references: [id])
+  votes    Vote[]
   comments Comment[]
 
   @@map("posts")
@@ -54,7 +56,24 @@ model Comment {
   author  User     @relation(fields: [authorId], references: [id])
   comment Comment? @relation("children", fields: [commentId], references: [id])
 
+  votes    Vote[]
   comments Comment[] @relation("children")
 
   @@map("comments")
+}
+
+model Vote {
+  id        String    @id @default(uuid())
+  authorId  String    @map("author_id")
+  postId    String?   @map("post_id")
+  commentId String?   @map("comment_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  type      String
+
+  post    Post?    @relation(fields: [postId], references: [id])
+  author  User     @relation(fields: [authorId], references: [id])
+  comment Comment? @relation(fields: [commentId], references: [id])
+
+  @@map("votes")
 }

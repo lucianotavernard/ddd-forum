@@ -11,7 +11,7 @@ import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe';
 
 import { Public } from '@/infra/auth/public';
 
-import { FetchPostCommentsUseCase } from '@/domain/forum/application/use-cases/fetch-post-comments';
+import { FetchCommentsFromPostUseCase } from '@/domain/forum/application/use-cases/fetch-post-comments-from-post';
 import { CommentPresenter } from '../presenters/comment-presenter';
 
 const pageQueryParamSchema = z.object({
@@ -34,16 +34,16 @@ const queryValidationPipe = new ZodValidationPipe(pageQueryParamSchema);
 type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>;
 
 @Public()
-@Controller('/posts/:postId/comments')
+@Controller('/posts/:id/comments')
 export class FetchPostCommentsController {
-  constructor(private readonly fetchPostComments: FetchPostCommentsUseCase) {}
+  constructor(private readonly fetchComments: FetchCommentsFromPostUseCase) {}
 
   @Get()
   async handle(
     @Query(queryValidationPipe) { page, per_page }: PageQueryParamSchema,
-    @Param('postId') postId: string,
+    @Param('id') postId: string,
   ) {
-    const result = await this.fetchPostComments.execute({
+    const result = await this.fetchComments.execute({
       page,
       per_page,
       postId,
@@ -53,10 +53,10 @@ export class FetchPostCommentsController {
       throw new BadRequestException();
     }
 
-    const postComments = result.value.postComments;
+    const comments = result.value.comments;
 
     return {
-      comments: postComments.map(CommentPresenter.toHTTP),
+      comments: comments.map(CommentPresenter.toHTTP),
     };
   }
 }

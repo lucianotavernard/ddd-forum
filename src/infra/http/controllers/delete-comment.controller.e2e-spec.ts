@@ -9,35 +9,35 @@ import { DatabaseModule } from '@/infra/database/database.module';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 
 import { PostFactory } from 'test/factories/make-post';
-import { PostCommentFactory } from 'test/factories/make-post-comment';
+import { CommentFactory } from 'test/factories/make-comment';
 import { AuthorFactory } from 'test/factories/make-author';
 
-describe('Edit comment on post (E2E)', () => {
+describe('Delete comment (E2E)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let authorFactory: AuthorFactory;
-  let commentFactory: PostCommentFactory;
   let postFactory: PostFactory;
+  let commentFactory: CommentFactory;
   let jwt: JwtService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [AuthorFactory, PostFactory, PostCommentFactory],
+      providers: [AuthorFactory, PostFactory, CommentFactory],
     }).compile();
 
     app = moduleRef.createNestApplication();
 
     prisma = moduleRef.get(PrismaService);
     authorFactory = moduleRef.get(AuthorFactory);
-    commentFactory = moduleRef.get(PostCommentFactory);
     postFactory = moduleRef.get(PostFactory);
+    commentFactory = moduleRef.get(CommentFactory);
     jwt = moduleRef.get(JwtService);
 
     await app.init();
   });
 
-  test('[PUT] /posts/:id/commens/:commentId', async () => {
+  test('[DELETE] /posts/comments/:id', async () => {
     const user = await authorFactory.makePrismaAuthor();
 
     const accessToken = jwt.sign({
@@ -48,29 +48,25 @@ describe('Edit comment on post (E2E)', () => {
       authorId: user.id,
     });
 
-    const comment = await commentFactory.makePrismaPostComment({
+    const comment = await commentFactory.makePrismaComment({
       authorId: user.id,
       postId: post.id,
     });
 
-    const postId = post.id.toString();
     const commentId = comment.id.toString();
 
     const response = await request(app.getHttpServer())
-      .put(`/posts/${postId}/comments/${commentId}`)
-      .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        content: 'New content',
-      });
+      .delete(`/comments/${commentId}`)
+      .set('Authorization', `Bearer ${accessToken}`);
 
     expect(response.statusCode).toBe(204);
 
-    const postOnDatabase = await prisma.comment.findFirst({
+    const commentOnDatabase = await prisma.comment.findUnique({
       where: {
-        content: 'New content',
+        id: commentId,
       },
     });
 
-    expect(postOnDatabase).toBeTruthy();
+    expect(commentOnDatabase).toBeNull();
   });
 });

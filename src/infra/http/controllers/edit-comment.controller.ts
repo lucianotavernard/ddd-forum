@@ -13,35 +13,34 @@ import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe';
 import { CurrentUser } from '@/infra/auth/current-user-decorator';
 import { UserPayload } from '@/infra/auth/jwt.strategy';
 
-import { EditCommentOnPostUseCase } from '@/domain/forum/application/use-cases/edit-comment-on-post';
+import { EditCommentUseCase } from '@/domain/forum/application/use-cases/edit-comment';
 
-const editCommentOnPostBodySchema = z.object({
+const editCommentBodySchema = z.object({
   content: z.string(),
 });
 
-const bodyValidationPipe = new ZodValidationPipe(editCommentOnPostBodySchema);
+const bodyValidationPipe = new ZodValidationPipe(editCommentBodySchema);
 
-type EditCommentOnPostBodySchema = z.infer<typeof editCommentOnPostBodySchema>;
+type EditCommentBodySchema = z.infer<typeof editCommentBodySchema>;
 
-@Controller('/posts/:postId/comments/:commentId')
+@Controller('/comments/:id')
 export class EditCommentOnPostController {
-  constructor(private readonly editCommentOnPost: EditCommentOnPostUseCase) {}
+  constructor(private readonly editComment: EditCommentUseCase) {}
 
   @Put()
   @HttpCode(204)
   async handle(
-    @Body(bodyValidationPipe) body: EditCommentOnPostBodySchema,
+    @Body(bodyValidationPipe) body: EditCommentBodySchema,
     @CurrentUser() user: UserPayload,
-    @Param('commentId') commentId: string,
+    @Param('id') commentId: string,
   ) {
     const { content } = body;
     const authorId = user.sub;
-    const postCommentId = commentId;
 
-    const result = await this.editCommentOnPost.execute({
+    const result = await this.editComment.execute({
       content,
       authorId,
-      postCommentId,
+      commentId,
     });
 
     if (result.isLeft()) {
