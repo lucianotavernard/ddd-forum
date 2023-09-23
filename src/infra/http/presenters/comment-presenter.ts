@@ -1,7 +1,7 @@
 import { Comment } from '@/domain/forum/enterprise/entities/comment';
 
 export class CommentPresenter {
-  static toHTTP(comment: Comment<any>) {
+  static toHTTP(comment: Comment) {
     return {
       id: comment.id.toString(),
       points: comment.points,

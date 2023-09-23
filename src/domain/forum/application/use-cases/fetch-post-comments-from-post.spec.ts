@@ -3,14 +3,20 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { FetchCommentsFromPostUseCase } from './fetch-post-comments-from-post';
 
 import { InMemoryCommentsRepository } from 'test/repositories/in-memory-comments-repository';
+import { InMemoryCommentVotesRepository } from 'test/repositories/in-memory-comment-votes-repository';
 import { makeComment } from 'test/factories/make-comment';
 
 let inMemoryCommentsRepository: InMemoryCommentsRepository;
+let inMemoryCommentVotesRepository: InMemoryCommentVotesRepository;
 let sut: FetchCommentsFromPostUseCase;
 
 describe('Fetch Post Comments', () => {
   beforeEach(() => {
-    inMemoryCommentsRepository = new InMemoryCommentsRepository();
+    inMemoryCommentVotesRepository = new InMemoryCommentVotesRepository();
+    inMemoryCommentsRepository = new InMemoryCommentsRepository(
+      inMemoryCommentVotesRepository,
+    );
+
     sut = new FetchCommentsFromPostUseCase(inMemoryCommentsRepository);
   });
 

@@ -1,14 +1,20 @@
 import { FetchPopularPostsUseCase } from './fetch-popular-posts';
 
 import { InMemoryPostsRepository } from 'test/repositories/in-memory-posts-repository';
+import { InMemoryPostVotesRepository } from 'test/repositories/in-memory-post-votes-repository';
 import { makePost } from 'test/factories/make-post';
 
 let inMemoryPostsRepository: InMemoryPostsRepository;
+let inMemoryPostVotesRepository: InMemoryPostVotesRepository;
 let sut: FetchPopularPostsUseCase;
 
 describe('Fetch Popular Posts', () => {
   beforeEach(() => {
-    inMemoryPostsRepository = new InMemoryPostsRepository();
+    inMemoryPostVotesRepository = new InMemoryPostVotesRepository();
+    inMemoryPostsRepository = new InMemoryPostsRepository(
+      inMemoryPostVotesRepository,
+    );
+
     sut = new FetchPopularPostsUseCase(inMemoryPostsRepository);
   });
 

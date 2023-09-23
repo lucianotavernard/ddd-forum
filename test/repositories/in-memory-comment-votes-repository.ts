@@ -14,6 +14,32 @@ export class InMemoryCommentVotesRepository implements CommentVotesRepository {
     return vote;
   }
 
+  async findAllForCommentByAuthorId(
+    commentId: string,
+    authorId: string,
+  ): Promise<CommentVote[]> {
+    const votes = this.items.filter((item) => {
+      return (
+        item.commentId.toString() === commentId &&
+        item.authorId.toString() === authorId
+      );
+    });
+
+    return votes;
+  }
+
+  async createMany(votes: CommentVote[]): Promise<void> {
+    this.items.push(...votes);
+  }
+
+  async deleteMany(votes: CommentVote[]): Promise<void> {
+    const commentVotes = this.items.filter((item) => {
+      return !votes.some((vote) => vote.equals(item));
+    });
+
+    this.items = commentVotes;
+  }
+
   async create(vote: CommentVote) {
     this.items.push(vote);
   }

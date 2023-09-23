@@ -5,14 +5,20 @@ import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-e
 import { EditCommentUseCase } from './edit-comment';
 
 import { InMemoryCommentsRepository } from 'test/repositories/in-memory-comments-repository';
+import { InMemoryCommentVotesRepository } from 'test/repositories/in-memory-comment-votes-repository';
 import { makeComment } from 'test/factories/make-comment';
 
 let inMemoryCommentsRepository: InMemoryCommentsRepository;
+let inMemoryCommentVotesRepository: InMemoryCommentVotesRepository;
 let sut: EditCommentUseCase;
 
 describe('Edit Comment', () => {
   beforeEach(() => {
-    inMemoryCommentsRepository = new InMemoryCommentsRepository();
+    inMemoryCommentVotesRepository = new InMemoryCommentVotesRepository();
+    inMemoryCommentsRepository = new InMemoryCommentsRepository(
+      inMemoryCommentVotesRepository,
+    );
+
     sut = new EditCommentUseCase(inMemoryCommentsRepository);
   });
 

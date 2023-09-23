@@ -24,6 +24,46 @@ export class PrismaPostVotesRepository implements PostVotesRepository {
     return PrismaPostVoteMapper.toDomain(vote);
   }
 
+  async findAllForPostByAuthorId(
+    postId: string,
+    authorId: string,
+  ): Promise<PostVote[]> {
+    const postVotess = await this.prisma.vote.findMany({
+      where: {
+        postId,
+        authorId,
+      },
+    });
+
+    return postVotess.map(PrismaPostVoteMapper.toDomain);
+  }
+
+  async createMany(votes: PostVote[]): Promise<void> {
+    if (votes.length === 0) {
+      return;
+    }
+
+    const data = PrismaPostVoteMapper.toPrismaUpdateMany(votes);
+
+    await this.prisma.vote.updateMany(data);
+  }
+
+  async deleteMany(votes: PostVote[]): Promise<void> {
+    if (votes.length === 0) {
+      return;
+    }
+
+    const voteIds = votes.map((vote) => vote.id.toString());
+
+    await this.prisma.vote.deleteMany({
+      where: {
+        id: {
+          in: voteIds,
+        },
+      },
+    });
+  }
+
   async save(vote: PostVote): Promise<void> {
     const data = PrismaPostVoteMapper.toPrisma(vote);
 
@@ -32,22 +72,6 @@ export class PrismaPostVotesRepository implements PostVotesRepository {
         id: vote.id.toString(),
       },
       data,
-    });
-  }
-
-  async create(vote: PostVote): Promise<void> {
-    const data = PrismaPostVoteMapper.toPrisma(vote);
-
-    await this.prisma.vote.create({
-      data,
-    });
-  }
-
-  async delete(vote: PostVote): Promise<void> {
-    await this.prisma.vote.delete({
-      where: {
-        id: vote.id.toString(),
-      },
     });
   }
 }

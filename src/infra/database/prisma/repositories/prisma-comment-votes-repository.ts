@@ -24,6 +24,46 @@ export class PrismaCommentVotesRepository implements CommentVotesRepository {
     return PrismaCommentVoteMapper.toDomain(vote);
   }
 
+  async findAllForCommentByAuthorId(
+    commentId: string,
+    authorId: string,
+  ): Promise<CommentVote[]> {
+    const commentVotes = await this.prisma.vote.findMany({
+      where: {
+        commentId,
+        authorId,
+      },
+    });
+
+    return commentVotes.map(PrismaCommentVoteMapper.toDomain);
+  }
+
+  async createMany(votes: CommentVote[]): Promise<void> {
+    if (votes.length === 0) {
+      return;
+    }
+
+    const data = PrismaCommentVoteMapper.toPrismaUpdateMany(votes);
+
+    await this.prisma.vote.updateMany(data);
+  }
+
+  async deleteMany(votes: CommentVote[]): Promise<void> {
+    if (votes.length === 0) {
+      return;
+    }
+
+    const voteIds = votes.map((vote) => vote.id.toString());
+
+    await this.prisma.vote.deleteMany({
+      where: {
+        id: {
+          in: voteIds,
+        },
+      },
+    });
+  }
+
   async save(vote: CommentVote): Promise<void> {
     const data = PrismaCommentVoteMapper.toPrisma(vote);
 
@@ -32,22 +72,6 @@ export class PrismaCommentVotesRepository implements CommentVotesRepository {
         id: vote.id.toString(),
       },
       data,
-    });
-  }
-
-  async create(vote: CommentVote): Promise<void> {
-    const data = PrismaCommentVoteMapper.toPrisma(vote);
-
-    await this.prisma.vote.create({
-      data,
-    });
-  }
-
-  async delete(vote: CommentVote): Promise<void> {
-    await this.prisma.vote.delete({
-      where: {
-        id: vote.id.toString(),
-      },
     });
   }
 }

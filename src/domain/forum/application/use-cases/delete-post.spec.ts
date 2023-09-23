@@ -5,14 +5,20 @@ import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-e
 import { DeletePostUseCase } from './delete-post';
 
 import { InMemoryPostsRepository } from 'test/repositories/in-memory-posts-repository';
+import { InMemoryPostVotesRepository } from 'test/repositories/in-memory-post-votes-repository';
 import { makePost } from 'test/factories/make-post';
 
 let inMemoryPostsRepository: InMemoryPostsRepository;
+let inMemoryPostVotesRepository: InMemoryPostVotesRepository;
 let sut: DeletePostUseCase;
 
 describe('Delete Post', () => {
   beforeEach(() => {
-    inMemoryPostsRepository = new InMemoryPostsRepository();
+    inMemoryPostVotesRepository = new InMemoryPostVotesRepository();
+    inMemoryPostsRepository = new InMemoryPostsRepository(
+      inMemoryPostVotesRepository,
+    );
+
     sut = new DeletePostUseCase(inMemoryPostsRepository);
   });
 

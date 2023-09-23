@@ -1,11 +1,16 @@
 import { DomainEvents } from '@/core/events/domain-events';
 import { PaginationParams } from '@/core/repositories/pagination-params';
 
-import { CommentsRepository } from '@/domain/forum/application/repositories/comments-repository';
 import { Comment } from '@/domain/forum/enterprise/entities/comment';
+import { CommentsRepository } from '@/domain/forum/application/repositories/comments-repository';
+import { CommentVotesRepository } from '@/domain/forum/application/repositories/comment-votes-repository';
 
 export class InMemoryCommentsRepository implements CommentsRepository {
   public items: Comment[] = [];
+
+  constructor(
+    private readonly commentVotesRepository: CommentVotesRepository,
+  ) {}
 
   async findById(id: string) {
     const comment = this.items.find((item) => item.id.toString() === id);
@@ -40,10 +45,17 @@ export class InMemoryCommentsRepository implements CommentsRepository {
     const itemIndex = this.items.findIndex((item) => item.id === comment.id);
 
     this.items[itemIndex] = comment;
+
+    await this.commentVotesRepository.createMany(comment.votes.getNewItems());
+    await this.commentVotesRepository.deleteMany(
+      comment.votes.getRemovedItems(),
+    );
   }
 
   async create(comment: Comment) {
     this.items.push(comment);
+
+    await this.commentVotesRepository.createMany(comment.votes.getNewItems());
 
     DomainEvents.dispatchEventsForAggregate(comment.id);
   }

@@ -5,6 +5,7 @@ import { AggregateRoot } from '@/core/entities/aggregate-root';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 
 import { Slug } from './value-objects/slug';
+import { PostVoteList } from './post-vote-list';
 
 export type PostProps = {
   authorId: UniqueEntityID;
@@ -12,6 +13,7 @@ export type PostProps = {
   title: string;
   content: string;
   points: number;
+  votes: PostVoteList;
   publishedAt: Date;
   createdAt: Date;
   updatedAt?: Date;
@@ -39,6 +41,15 @@ export class Post extends AggregateRoot<PostProps> {
 
   set content(content: string) {
     this.props.content = content;
+    this.touch();
+  }
+
+  get votes() {
+    return this.props.votes;
+  }
+
+  set votes(votes: PostVoteList) {
+    this.props.votes = votes;
     this.touch();
   }
 
@@ -75,7 +86,10 @@ export class Post extends AggregateRoot<PostProps> {
   }
 
   static create(
-    props: Optional<PostProps, 'createdAt' | 'slug' | 'points' | 'publishedAt'>,
+    props: Optional<
+      PostProps,
+      'createdAt' | 'slug' | 'points' | 'votes' | 'publishedAt'
+    >,
     id?: UniqueEntityID,
   ) {
     const post = new Post(
@@ -83,6 +97,7 @@ export class Post extends AggregateRoot<PostProps> {
         ...props,
         slug: props.slug ?? Slug.createFromText(props.title),
         points: props.points ?? 0,
+        votes: props.votes ?? new PostVoteList(),
         createdAt: props.createdAt ?? new Date(),
         publishedAt: props.publishedAt ?? new Date(),
       },

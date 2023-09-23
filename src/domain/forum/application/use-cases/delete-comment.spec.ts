@@ -5,14 +5,20 @@ import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-e
 import { DeleteCommentUseCase } from './delete-comment';
 
 import { InMemoryCommentsRepository } from 'test/repositories/in-memory-comments-repository';
+import { InMemoryCommentVotesRepository } from 'test/repositories/in-memory-comment-votes-repository';
 import { makeComment } from 'test/factories/make-comment';
 
 let inMemoryCommentsRepository: InMemoryCommentsRepository;
+let inMemoryCommentVotesRepository: InMemoryCommentVotesRepository;
 let sut: DeleteCommentUseCase;
 
 describe('Delete Post Comment', () => {
   beforeEach(() => {
-    inMemoryCommentsRepository = new InMemoryCommentsRepository();
+    inMemoryCommentVotesRepository = new InMemoryCommentVotesRepository();
+    inMemoryCommentsRepository = new InMemoryCommentsRepository(
+      inMemoryCommentVotesRepository,
+    );
+
     sut = new DeleteCommentUseCase(inMemoryCommentsRepository);
   });
 

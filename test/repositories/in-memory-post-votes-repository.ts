@@ -14,6 +14,32 @@ export class InMemoryPostVotesRepository implements PostVotesRepository {
     return vote;
   }
 
+  async findAllForPostByAuthorId(
+    postId: string,
+    authorId: string,
+  ): Promise<PostVote[]> {
+    const votes = this.items.filter((item) => {
+      return (
+        item.postId.toString() === postId &&
+        item.authorId.toString() === authorId
+      );
+    });
+
+    return votes;
+  }
+
+  async createMany(votes: PostVote[]): Promise<void> {
+    this.items.push(...votes);
+  }
+
+  async deleteMany(votes: PostVote[]): Promise<void> {
+    const postVotes = this.items.filter((item) => {
+      return !votes.some((vote) => vote.equals(item));
+    });
+
+    this.items = postVotes;
+  }
+
   async create(vote: PostVote) {
     this.items.push(vote);
   }

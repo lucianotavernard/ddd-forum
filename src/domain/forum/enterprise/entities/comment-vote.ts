@@ -28,4 +28,36 @@ export class CommentVote extends Vote<CommentProps> {
 
     return vote;
   }
+
+  static createUpvote(
+    props: Optional<Omit<CommentProps, 'type'>, 'createdAt'>,
+    id?: UniqueEntityID,
+  ) {
+    const vote = new CommentVote(
+      {
+        ...props,
+        type: 'UPVOTE',
+        createdAt: props.createdAt ?? new Date(),
+      },
+      id,
+    );
+
+    return vote;
+  }
+
+  static createDownvote(
+    props: Optional<Omit<CommentProps, 'type'>, 'createdAt'>,
+    id?: UniqueEntityID,
+  ) {
+    const vote = new CommentVote(
+      {
+        ...props,
+        type: 'DOWNVOTE',
+        createdAt: props.createdAt ?? new Date(),
+      },
+      id,
+    );
+
+    return vote;
+  }
 }

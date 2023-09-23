@@ -1,29 +1,43 @@
-import { UpvoteOnCommentUseCase } from './upvote-on-comment';
-
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error';
+
+import { UpvoteOnCommentUseCase } from './upvote-on-comment';
+import { CommentService } from '@/domain/forum/application/services/comment-service';
 
 import { InMemoryCommentsRepository } from 'test/repositories/in-memory-comments-repository';
 import { InMemoryCommentVotesRepository } from 'test/repositories/in-memory-comment-votes-repository';
+import { InMemoryAuthorsRepository } from 'test/repositories/in-memory-authors-repository';
+import { makeAuthor } from 'test/factories/make-author';
 import { makeComment } from 'test/factories/make-comment';
 
+let commentService: CommentService;
 let inMemoryCommentsRepository: InMemoryCommentsRepository;
+let inMemoryAuthorsRepository: InMemoryAuthorsRepository;
 let inMemoryCommentVotesRepository: InMemoryCommentVotesRepository;
 let sut: UpvoteOnCommentUseCase;
 
 describe('Upvote on Comment', () => {
   beforeEach(() => {
+    commentService = new CommentService();
+
+    inMemoryAuthorsRepository = new InMemoryAuthorsRepository();
     inMemoryCommentVotesRepository = new InMemoryCommentVotesRepository();
-    inMemoryCommentsRepository = new InMemoryCommentsRepository();
+    inMemoryCommentsRepository = new InMemoryCommentsRepository(
+      inMemoryCommentVotesRepository,
+    );
 
     sut = new UpvoteOnCommentUseCase(
+      commentService,
       inMemoryCommentsRepository,
       inMemoryCommentVotesRepository,
+      inMemoryAuthorsRepository,
     );
   });
 
   it('should be able to upvote on comment', async () => {
-    const comment = makeComment();
+    const author = makeAuthor();
+    const comment = makeComment({ authorId: author.id });
 
+    await inMemoryAuthorsRepository.create(author);
     await inMemoryCommentsRepository.create(comment);
 
     await sut.execute({
@@ -33,7 +47,7 @@ describe('Upvote on Comment', () => {
 
     const result = inMemoryCommentVotesRepository.items[0];
 
-    expect(result.isUpVote).toBeTruthy();
+    expect(result.isUpvote).toBeTruthy();
     expect(result.commentId.equals(comment.id)).toBeTruthy();
     expect(result.authorId.equals(comment.authorId)).toBeTruthy();
   });

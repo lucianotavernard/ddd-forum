@@ -25,4 +25,36 @@ export class PostVote extends Vote<PostProps> {
 
     return vote;
   }
+
+  static createUpvote(
+    props: Optional<Omit<PostProps, 'type'>, 'createdAt'>,
+    id?: UniqueEntityID,
+  ) {
+    const vote = new PostVote(
+      {
+        ...props,
+        type: 'UPVOTE',
+        createdAt: props.createdAt ?? new Date(),
+      },
+      id,
+    );
+
+    return vote;
+  }
+
+  static createDownvote(
+    props: Optional<Omit<PostProps, 'type'>, 'createdAt'>,
+    id?: UniqueEntityID,
+  ) {
+    const vote = new PostVote(
+      {
+        ...props,
+        type: 'DOWNVOTE',
+        createdAt: props.createdAt ?? new Date(),
+      },
+      id,
+    );
+
+    return vote;
+  }
 }

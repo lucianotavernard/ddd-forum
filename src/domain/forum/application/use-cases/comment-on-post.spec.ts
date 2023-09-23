@@ -4,16 +4,28 @@ import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-e
 
 import { InMemoryPostsRepository } from 'test/repositories/in-memory-posts-repository';
 import { InMemoryCommentsRepository } from 'test/repositories/in-memory-comments-repository';
+import { InMemoryPostVotesRepository } from 'test/repositories/in-memory-post-votes-repository';
+import { InMemoryCommentVotesRepository } from 'test/repositories/in-memory-comment-votes-repository';
 import { makePost } from 'test/factories/make-post';
 
 let inMemoryPostsRepository: InMemoryPostsRepository;
 let inMemoryCommentsRepository: InMemoryCommentsRepository;
+let inMemoryPostVotesRepository: InMemoryPostVotesRepository;
+let inMemoryCommentVotesRepository: InMemoryCommentVotesRepository;
 let sut: CommentOnPostUseCase;
 
 describe('Comment on Post', () => {
   beforeEach(() => {
-    inMemoryCommentsRepository = new InMemoryCommentsRepository();
-    inMemoryPostsRepository = new InMemoryPostsRepository();
+    inMemoryCommentVotesRepository = new InMemoryCommentVotesRepository();
+    inMemoryPostVotesRepository = new InMemoryPostVotesRepository();
+
+    inMemoryCommentsRepository = new InMemoryCommentsRepository(
+      inMemoryCommentVotesRepository,
+    );
+
+    inMemoryPostsRepository = new InMemoryPostsRepository(
+      inMemoryPostVotesRepository,
+    );
 
     sut = new CommentOnPostUseCase(
       inMemoryPostsRepository,

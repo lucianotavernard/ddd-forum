@@ -3,6 +3,9 @@ import { Module } from '@nestjs/common';
 import { DatabaseModule } from '../database/database.module';
 import { ProviderModule } from '../provider/provider.module';
 
+import { PostService } from '@/domain/forum/application/services/post-service';
+import { CommentService } from '@/domain/forum/application/services/comment-service';
+
 import { AuthenticateAuthorUseCase } from '@/domain/forum/application/use-cases/authenticate-author';
 import { CommentOnPostUseCase } from '@/domain/forum/application/use-cases/comment-on-post';
 import { CreatePostUseCase } from '@/domain/forum/application/use-cases/create-post';
@@ -58,6 +61,8 @@ import { UpvoteOnPostController } from './controllers/upvote-on-post.controller'
     GetPostBySlugController,
   ],
   providers: [
+    PostService,
+    CommentService,
     AuthenticateAuthorUseCase,
     CommentOnPostUseCase,
     CreatePostUseCase,

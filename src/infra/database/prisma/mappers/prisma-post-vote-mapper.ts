@@ -30,4 +30,19 @@ export class PrismaPostVoteMapper {
       updatedAt: vote.updatedAt,
     };
   }
+
+  static toPrismaUpdateMany(votes: PostVote[]): Prisma.VoteUpdateManyArgs {
+    const voteIds = votes.map((vote) => vote.id.toString());
+
+    return {
+      where: {
+        id: {
+          in: voteIds,
+        },
+      },
+      data: {
+        postId: votes[0].postId.toString(),
+      },
+    };
+  }
 }

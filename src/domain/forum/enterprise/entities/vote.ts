@@ -33,11 +33,11 @@ export abstract class Vote<Props extends VoteProps> extends Entity<Props> {
     return this.props.updatedAt;
   }
 
-  get isUpVote() {
+  get isUpvote() {
     return this.props.type === 'UPVOTE';
   }
 
-  get isDownVote() {
+  get isDownvote() {
     return this.props.type === 'DOWNVOTE';
   }
 

@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
-import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { Either, left, right } from '@/core/either';
 
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error';
 
 import { CommentVote } from '@/domain/forum/enterprise/entities/comment-vote';
+import { CommentService } from '@/domain/forum/application/services/comment-service';
 import { CommentsRepository } from '@/domain/forum/application/repositories/comments-repository';
 import { CommentVotesRepository } from '@/domain/forum/application/repositories/comment-votes-repository';
+import { AuthorsRepository } from '@/domain/forum/application/repositories/authors-repository';
 
 type DownvoteOnCommentUseCaseRequest = {
   commentId: string;
@@ -24,8 +25,10 @@ type DownvoteOnCommentUseCaseResponse = Either<
 @Injectable()
 export class DownvoteOnCommentUseCase {
   constructor(
+    private readonly commentService: CommentService,
     private readonly commentsRepository: CommentsRepository,
     private readonly commentVotesRepository: CommentVotesRepository,
+    private readonly authorsRepository: AuthorsRepository,
   ) {}
 
   async execute({
@@ -38,16 +41,26 @@ export class DownvoteOnCommentUseCase {
       return left(new ResourceNotFoundError());
     }
 
-    const vote = CommentVote.create({
-      authorId: new UniqueEntityID(authorId),
-      commentId: new UniqueEntityID(commentId),
-      type: 'DOWNVOTE',
-    });
+    const author = await this.authorsRepository.findById(authorId);
 
-    await this.commentVotesRepository.create(vote);
+    if (!author) {
+      return left(new ResourceNotFoundError());
+    }
 
-    return right({
-      vote,
-    });
+    const existingVotesOnCommentByAuthor =
+      await this.commentVotesRepository.findAllForCommentByAuthorId(
+        commentId,
+        authorId,
+      );
+
+    this.commentService.downvoteComment(
+      comment,
+      author,
+      existingVotesOnCommentByAuthor,
+    );
+
+    await this.commentsRepository.save(comment);
+
+    return right(undefined);
   }
 }

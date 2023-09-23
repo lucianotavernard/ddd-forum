@@ -1,11 +1,14 @@
 import { DomainEvents } from '@/core/events/domain-events';
 import { PaginationParams } from '@/core/repositories/pagination-params';
 
-import { PostsRepository } from '@/domain/forum/application/repositories/posts-repository';
 import { Post } from '@/domain/forum/enterprise/entities/post';
+import { PostsRepository } from '@/domain/forum/application/repositories/posts-repository';
+import { PostVotesRepository } from '@/domain/forum/application/repositories/post-votes-repository';
 
 export class InMemoryPostsRepository implements PostsRepository {
   public items: Post[] = [];
+
+  constructor(private readonly postVotesRepository: PostVotesRepository) {}
 
   async findById(id: string) {
     const post = this.items.find((item) => item.id.toString() === id);
@@ -53,6 +56,9 @@ export class InMemoryPostsRepository implements PostsRepository {
     const itemIndex = this.items.findIndex((item) => item.id === post.id);
 
     this.items[itemIndex] = post;
+
+    await this.postVotesRepository.createMany(post.votes.getNewItems());
+    await this.postVotesRepository.deleteMany(post.votes.getRemovedItems());
 
     DomainEvents.dispatchEventsForAggregate(post.id);
   }

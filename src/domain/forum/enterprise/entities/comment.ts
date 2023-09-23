@@ -3,6 +3,7 @@ import { Optional } from '@/core/types/optional';
 import { AggregateRoot } from '@/core/entities/aggregate-root';
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 
+import { CommentVoteList } from './comment-vote-list';
 import { CommentCreatedEvent } from '../events/comment-created-event';
 
 export type CommentProps = {
@@ -11,6 +12,7 @@ export type CommentProps = {
   commentId?: UniqueEntityID;
   content: string;
   points: number;
+  votes: CommentVoteList;
   createdAt: Date;
   updatedAt?: Date;
 };
@@ -37,6 +39,15 @@ export class Comment extends AggregateRoot<CommentProps> {
     this.touch();
   }
 
+  get votes() {
+    return this.props.votes;
+  }
+
+  set votes(votes: CommentVoteList) {
+    this.props.votes = votes;
+    this.touch();
+  }
+
   get points() {
     return this.props.points;
   }
@@ -58,13 +69,14 @@ export class Comment extends AggregateRoot<CommentProps> {
   }
 
   static create(
-    props: Optional<CommentProps, 'createdAt' | 'points'>,
+    props: Optional<CommentProps, 'createdAt' | 'points' | 'votes'>,
     id?: UniqueEntityID,
   ) {
     const comment = new Comment(
       {
         ...props,
         points: props.points ?? 0,
+        votes: props.votes ?? new CommentVoteList(),
         createdAt: props.createdAt ?? new Date(),
       },
       id,
