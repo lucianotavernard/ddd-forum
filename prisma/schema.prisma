@@ -25,15 +25,14 @@ model User {
 }
 
 model Post {
-  id          String    @id @default(uuid())
-  authorId    String    @map("author_id")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime? @updatedAt @map("updated_at")
-  slug        String    @unique
-  title       String
-  content     String
-  points      Int       @default(0)
-  publishedAt DateTime  @map("published_at")
+  id        String    @id @default(uuid())
+  authorId  String    @map("author_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  slug      String    @unique
+  title     String
+  content   String
+  points    Int       @default(0)
 
   author   User      @relation(fields: [authorId], references: [id])
   votes    Vote[]
