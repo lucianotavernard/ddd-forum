@@ -6,18 +6,21 @@ import { InMemoryPostsRepository } from 'test/repositories/in-memory-posts-repos
 import { InMemoryCommentsRepository } from 'test/repositories/in-memory-comments-repository';
 import { InMemoryPostVotesRepository } from 'test/repositories/in-memory-post-votes-repository';
 import { InMemoryCommentVotesRepository } from 'test/repositories/in-memory-comment-votes-repository';
+import { InMemoryAuthorsRepository } from 'test/repositories/in-memory-authors-repository';
 import { makePost } from 'test/factories/make-post';
 
 let inMemoryPostsRepository: InMemoryPostsRepository;
 let inMemoryCommentsRepository: InMemoryCommentsRepository;
 let inMemoryPostVotesRepository: InMemoryPostVotesRepository;
 let inMemoryCommentVotesRepository: InMemoryCommentVotesRepository;
+let inMemoryAuthorsRepository: InMemoryAuthorsRepository;
 let sut: CommentOnPostUseCase;
 
 describe('Comment on Post', () => {
   beforeEach(() => {
     inMemoryCommentVotesRepository = new InMemoryCommentVotesRepository();
     inMemoryPostVotesRepository = new InMemoryPostVotesRepository();
+    inMemoryAuthorsRepository = new InMemoryAuthorsRepository();
 
     inMemoryCommentsRepository = new InMemoryCommentsRepository(
       inMemoryCommentVotesRepository,
@@ -25,6 +28,7 @@ describe('Comment on Post', () => {
 
     inMemoryPostsRepository = new InMemoryPostsRepository(
       inMemoryPostVotesRepository,
+      inMemoryAuthorsRepository,
     );
 
     sut = new CommentOnPostUseCase(

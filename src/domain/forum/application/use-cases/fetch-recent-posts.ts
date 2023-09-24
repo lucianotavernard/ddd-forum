@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { Either, right } from '@/core/either';
 
-import { Post } from '@/domain/forum/enterprise/entities/post';
+import { PostWithAuthor } from '@/domain/forum/enterprise/entities/value-objects/post-with-author';
 import { PostsRepository } from '@/domain/forum/application/repositories/posts-repository';
 
 type FetchRecentPostsUseCaseRequest = {
@@ -13,7 +13,7 @@ type FetchRecentPostsUseCaseRequest = {
 type FetchRecentPostsUseCaseResponse = Either<
   null,
   {
-    posts: Post[];
+    posts: PostWithAuthor[];
   }
 >;
 

@@ -4,6 +4,10 @@ import { Author } from '@/domain/forum/enterprise/entities/author';
 export class InMemoryAuthorsRepository implements AuthorsRepository {
   public items: Author[] = [];
 
+  async findAllAuthors() {
+    return this.items;
+  }
+
   async findById(id: string) {
     const author = this.items.find((item) => item.id.toString() === id);
 

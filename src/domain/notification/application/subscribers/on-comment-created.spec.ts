@@ -13,6 +13,7 @@ import { InMemoryCommentsRepository } from 'test/repositories/in-memory-comments
 import { InMemoryPostVotesRepository } from 'test/repositories/in-memory-post-votes-repository';
 import { InMemoryCommentVotesRepository } from 'test/repositories/in-memory-comment-votes-repository';
 import { InMemoryNotificationsRepository } from 'test/repositories/in-memory-notifications-repository';
+import { InMemoryAuthorsRepository } from 'test/repositories/in-memory-authors-repository';
 import { makeComment } from 'test/factories/make-comment';
 import { makePost } from 'test/factories/make-post';
 import { waitFor } from 'test/utils/wait-for';
@@ -22,6 +23,7 @@ let inMemoryCommentsRepository: InMemoryCommentsRepository;
 let inMemoryPostVotesRepository: InMemoryPostVotesRepository;
 let inMemoryCommentVotesRepository: InMemoryCommentVotesRepository;
 let inMemoryNotificationsRepository: InMemoryNotificationsRepository;
+let inMemoryAuthorsRepository: InMemoryAuthorsRepository;
 let sendNotificationUseCase: SendNotificationUseCase;
 
 let sendNotificationExecuteSpy: SpyInstance<
@@ -31,11 +33,13 @@ let sendNotificationExecuteSpy: SpyInstance<
 
 describe('On Comment Created', () => {
   beforeEach(() => {
-    inMemoryPostVotesRepository = new InMemoryPostVotesRepository();
     inMemoryCommentVotesRepository = new InMemoryCommentVotesRepository();
+    inMemoryPostVotesRepository = new InMemoryPostVotesRepository();
+    inMemoryAuthorsRepository = new InMemoryAuthorsRepository();
 
     inMemoryPostsRepository = new InMemoryPostsRepository(
       inMemoryPostVotesRepository,
+      inMemoryAuthorsRepository,
     );
 
     inMemoryCommentsRepository = new InMemoryCommentsRepository(
@@ -43,6 +47,7 @@ describe('On Comment Created', () => {
     );
 
     inMemoryNotificationsRepository = new InMemoryNotificationsRepository();
+
     sendNotificationUseCase = new SendNotificationUseCase(
       inMemoryNotificationsRepository,
     );

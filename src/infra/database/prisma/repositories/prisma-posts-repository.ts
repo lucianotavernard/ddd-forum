@@ -3,8 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { PaginationParams } from '@/core/repositories/pagination-params';
 
 import { PostsRepository } from '@/domain/forum/application/repositories/posts-repository';
+import { PostWithAuthor } from '@/domain/forum/enterprise/entities/value-objects/post-with-author';
 import { Post } from '@/domain/forum/enterprise/entities/post';
 
+import { PrismaPostWithAuthorMapper } from '../mappers/prisma-post-with-author-mapper';
 import { PrismaPostMapper } from '../mappers/prisma-post-mapper';
 import { PrismaService } from '../prisma.service';
 
@@ -40,8 +42,14 @@ export class PrismaPostsRepository implements PostsRepository {
     return PrismaPostMapper.toDomain(post);
   }
 
-  async findManyPopular({ page, per_page }: PaginationParams): Promise<Post[]> {
+  async findManyPopular({
+    page,
+    per_page,
+  }: PaginationParams): Promise<PostWithAuthor[]> {
     const posts = await this.prisma.post.findMany({
+      include: {
+        author: true,
+      },
       orderBy: {
         points: 'desc',
       },
@@ -49,11 +57,17 @@ export class PrismaPostsRepository implements PostsRepository {
       skip: (page - 1) * per_page,
     });
 
-    return posts.map(PrismaPostMapper.toDomain);
+    return posts.map(PrismaPostWithAuthorMapper.toDomain);
   }
 
-  async findManyRecent({ page, per_page }: PaginationParams): Promise<Post[]> {
+  async findManyRecent({
+    page,
+    per_page,
+  }: PaginationParams): Promise<PostWithAuthor[]> {
     const posts = await this.prisma.post.findMany({
+      include: {
+        author: true,
+      },
       orderBy: {
         createdAt: 'desc',
       },
@@ -61,7 +75,7 @@ export class PrismaPostsRepository implements PostsRepository {
       skip: (page - 1) * per_page,
     });
 
-    return posts.map(PrismaPostMapper.toDomain);
+    return posts.map(PrismaPostWithAuthorMapper.toDomain);
   }
 
   async create(post: Post): Promise<void> {

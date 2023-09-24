@@ -23,6 +23,7 @@ export class PostService {
 
     if (downvoteAlreadyExists) {
       post.votes.remove(existingDownvote);
+      post.points = post.points - 1;
 
       return false;
     }
@@ -33,6 +34,7 @@ export class PostService {
     });
 
     post.votes.add(upvote);
+    post.points = post.points + 1;
 
     return true;
   }
@@ -54,6 +56,7 @@ export class PostService {
 
     if (upvoteAlreadyExists) {
       post.votes.remove(existingUpvote);
+      post.points = post.points + 1;
 
       return false;
     }
@@ -64,6 +67,7 @@ export class PostService {
     });
 
     post.votes.add(downvote);
+    post.points = post.points - 1;
 
     return true;
   }

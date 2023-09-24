@@ -19,10 +19,12 @@ describe('Downvote on Post', () => {
   beforeEach(() => {
     postService = new PostService();
 
-    inMemoryAuthorsRepository = new InMemoryAuthorsRepository();
     inMemoryPostVotesRepository = new InMemoryPostVotesRepository();
+    inMemoryAuthorsRepository = new InMemoryAuthorsRepository();
+
     inMemoryPostsRepository = new InMemoryPostsRepository(
       inMemoryPostVotesRepository,
+      inMemoryAuthorsRepository,
     );
 
     sut = new DownvoteOnPostUseCase(

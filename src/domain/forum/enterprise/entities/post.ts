@@ -48,17 +48,17 @@ export class Post extends AggregateRoot<PostProps> {
     return this.props.votes;
   }
 
-  set votes(votes: PostVoteList) {
-    this.props.votes = votes;
-    this.touch();
-  }
-
   get slug() {
     return this.props.slug;
   }
 
   get points() {
     return this.props.points;
+  }
+
+  set points(points: number) {
+    this.props.points = points;
+    this.touch();
   }
 
   get createdAt() {

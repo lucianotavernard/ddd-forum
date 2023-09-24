@@ -9,6 +9,13 @@ import { PrismaAuthorMapper } from '../mappers/prisma-author-mapper';
 @Injectable()
 export class PrismaAuthorsRepository implements AuthorsRepository {
   constructor(private readonly prisma: PrismaService) {}
+
+  async findAllAuthors(): Promise<Author[]> {
+    const authors = await this.prisma.user.findMany();
+
+    return authors.map(PrismaAuthorMapper.toDomain);
+  }
+
   async findById(id: string): Promise<Author | null> {
     const user = await this.prisma.user.findUnique({
       where: {

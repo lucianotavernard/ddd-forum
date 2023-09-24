@@ -5,17 +5,22 @@ import { Slug } from '@/domain/forum/enterprise/entities/value-objects/slug';
 
 import { InMemoryPostsRepository } from 'test/repositories/in-memory-posts-repository';
 import { InMemoryPostVotesRepository } from 'test/repositories/in-memory-post-votes-repository';
+import { InMemoryAuthorsRepository } from 'test/repositories/in-memory-authors-repository';
 import { makePost } from 'test/factories/make-post';
 
 let inMemoryPostsRepository: InMemoryPostsRepository;
 let inMemoryPostVotesRepository: InMemoryPostVotesRepository;
+let inMemoryAuthorsRepository: InMemoryAuthorsRepository;
 let sut: GetPostBySlugUseCase;
 
 describe('Get Post By Slug', () => {
   beforeEach(() => {
     inMemoryPostVotesRepository = new InMemoryPostVotesRepository();
+    inMemoryAuthorsRepository = new InMemoryAuthorsRepository();
+
     inMemoryPostsRepository = new InMemoryPostsRepository(
       inMemoryPostVotesRepository,
+      inMemoryAuthorsRepository,
     );
 
     sut = new GetPostBySlugUseCase(inMemoryPostsRepository);

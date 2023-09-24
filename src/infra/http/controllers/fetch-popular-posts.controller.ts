@@ -6,7 +6,7 @@ import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe';
 import { Public } from '@/infra/auth/public';
 
 import { FetchPopularPostsUseCase } from '@/domain/forum/application/use-cases/fetch-popular-posts';
-import { PostPresenter } from '../presenters/post-presenter';
+import { PostWithAuthorPresenter } from '../presenters/post-with-author-presenter';
 
 const pageQueryParamSchema = z.object({
   page: z
@@ -48,7 +48,7 @@ export class FetchPopularPostsController {
     const posts = result.value.posts;
 
     return {
-      posts: posts.map(PostPresenter.toHTTP),
+      posts: posts.map(PostWithAuthorPresenter.toHTTP),
     };
   }
 }

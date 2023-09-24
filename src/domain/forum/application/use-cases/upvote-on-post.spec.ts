@@ -21,8 +21,10 @@ describe('Upvote on Post', () => {
 
     inMemoryAuthorsRepository = new InMemoryAuthorsRepository();
     inMemoryPostVotesRepository = new InMemoryPostVotesRepository();
+
     inMemoryPostsRepository = new InMemoryPostsRepository(
       inMemoryPostVotesRepository,
+      inMemoryAuthorsRepository,
     );
 
     sut = new UpvoteOnPostUseCase(

@@ -2,16 +2,21 @@ import { CreatePostUseCase } from './create-post';
 
 import { InMemoryPostsRepository } from 'test/repositories/in-memory-posts-repository';
 import { InMemoryPostVotesRepository } from 'test/repositories/in-memory-post-votes-repository';
+import { InMemoryAuthorsRepository } from 'test/repositories/in-memory-authors-repository';
 
 let inMemoryPostsRepository: InMemoryPostsRepository;
 let inMemoryPostVotesRepository: InMemoryPostVotesRepository;
+let inMemoryAuthorsRepository: InMemoryAuthorsRepository;
 let sut: CreatePostUseCase;
 
 describe('Create Post', () => {
   beforeEach(() => {
     inMemoryPostVotesRepository = new InMemoryPostVotesRepository();
+    inMemoryAuthorsRepository = new InMemoryAuthorsRepository();
+
     inMemoryPostsRepository = new InMemoryPostsRepository(
       inMemoryPostVotesRepository,
+      inMemoryAuthorsRepository,
     );
 
     sut = new CreatePostUseCase(inMemoryPostsRepository);
