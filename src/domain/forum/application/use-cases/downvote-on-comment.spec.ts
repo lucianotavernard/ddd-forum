@@ -46,16 +46,40 @@ describe('Downvote on Comment', () => {
     });
 
     const result = inMemoryCommentVotesRepository.items[0];
+    const newVote = comment.votes.currentItems[0];
+
+    expect(comment.votes.compareItems(newVote, result)).toBeTruthy();
 
     expect(result.isDownvote).toBeTruthy();
     expect(result.commentId.equals(comment.id)).toBeTruthy();
     expect(result.authorId.equals(comment.authorId)).toBeTruthy();
+
+    expect(result).toEqual(
+      expect.objectContaining({
+        createdAt: expect.any(Date),
+        updatedAt: undefined,
+      }),
+    );
   });
 
   it('should not be able to downvote on non-existing comment', async () => {
     const result = await sut.execute({
       commentId: 'comment-1',
       authorId: 'author-1',
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
+  });
+
+  it('should not be able to downvote on comment with non-existing author', async () => {
+    const comment = makeComment();
+
+    await inMemoryCommentsRepository.create(comment);
+
+    const result = await sut.execute({
+      commentId: comment.id.toString(),
+      authorId: comment.authorId.toString(),
     });
 
     expect(result.isLeft()).toBe(true);

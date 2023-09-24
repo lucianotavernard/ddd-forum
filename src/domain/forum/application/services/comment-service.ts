@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { right } from '@/core/either';
-
 import { Author } from '@/domain/forum/enterprise/entities/author';
 import { Comment } from '@/domain/forum/enterprise/entities/comment';
 import { CommentVote } from '@/domain/forum/enterprise/entities/comment-vote';
@@ -17,7 +15,7 @@ export class CommentService {
     const upvoteAlreadyExists = !!existingUpvote;
 
     if (upvoteAlreadyExists) {
-      return right(undefined);
+      return false;
     }
 
     const existingDownvote = votesOnCommentByAuthor.find((v) => v.isDownvote);
@@ -25,8 +23,9 @@ export class CommentService {
 
     if (downvoteAlreadyExists) {
       comment.votes.remove(existingDownvote);
+      comment.points = comment.points - 1;
 
-      return right(undefined);
+      return false;
     }
 
     const upvote = CommentVote.createUpvote({
@@ -35,8 +34,9 @@ export class CommentService {
     });
 
     comment.votes.add(upvote);
+    comment.points = comment.points + 1;
 
-    return right(undefined);
+    return true;
   }
 
   public downvoteComment(
@@ -48,7 +48,7 @@ export class CommentService {
     const downvoteAlreadyExists = !!existingDownvote;
 
     if (downvoteAlreadyExists) {
-      return right(undefined);
+      return false;
     }
 
     const existingUpvote = votesOnCommentByAuthor.find((v) => v.isUpvote);
@@ -56,8 +56,9 @@ export class CommentService {
 
     if (upvoteAlreadyExists) {
       comment.votes.remove(existingUpvote);
+      comment.points = comment.points + 1;
 
-      return right(undefined);
+      return false;
     }
 
     const downvote = CommentVote.createDownvote({
@@ -66,7 +67,8 @@ export class CommentService {
     });
 
     comment.votes.add(downvote);
+    comment.points = comment.points - 1;
 
-    return right(undefined);
+    return true;
   }
 }

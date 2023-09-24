@@ -20,7 +20,11 @@ describe('Send Notification', () => {
 
     expect(result.isRight()).toBe(true);
     expect(inMemoryNotificationsRepository.items[0]).toEqual(
-      result.value?.notification,
+      expect.objectContaining({
+        title: 'New notification',
+        content: 'Notification content',
+        createdAt: expect.any(Date),
+      }),
     );
   });
 });

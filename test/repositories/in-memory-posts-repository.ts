@@ -32,7 +32,29 @@ export class InMemoryPostsRepository implements PostsRepository {
       return null;
     }
 
-    return post;
+    const author = await this.authorsRepository.findById(
+      post.authorId.toString(),
+    );
+
+    if (!author) {
+      throw new Error(
+        `Author with ID "${post.authorId.toString()} does not exist."`,
+      );
+    }
+
+    return PostWithAuthor.create({
+      postId: post.id,
+      authorId: post.authorId,
+      author: author.name,
+      isNew: post.isNew,
+      slug: post.slug.value,
+      title: post.title,
+      points: post.points,
+      content: post.content,
+      excerpt: post.excerpt,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+    });
   }
 
   async findManyRecent({ page, per_page }: PaginationParams) {
@@ -54,6 +76,7 @@ export class InMemoryPostsRepository implements PostsRepository {
           postId: post.id,
           authorId: post.authorId,
           author: author.name,
+          isNew: post.isNew,
           slug: post.slug.value,
           title: post.title,
           points: post.points,
@@ -61,7 +84,6 @@ export class InMemoryPostsRepository implements PostsRepository {
           excerpt: post.excerpt,
           createdAt: post.createdAt,
           updatedAt: post.updatedAt,
-          publishedAt: post.publishedAt,
         });
       });
 
@@ -87,6 +109,7 @@ export class InMemoryPostsRepository implements PostsRepository {
           postId: post.id,
           authorId: post.authorId,
           author: author.name,
+          isNew: post.isNew,
           slug: post.slug.value,
           title: post.title,
           points: post.points,
@@ -94,7 +117,6 @@ export class InMemoryPostsRepository implements PostsRepository {
           excerpt: post.excerpt,
           createdAt: post.createdAt,
           updatedAt: post.updatedAt,
-          publishedAt: post.publishedAt,
         });
       });
 

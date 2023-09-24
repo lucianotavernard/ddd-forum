@@ -4,13 +4,13 @@ import { ValueObject } from '@/core/entities/value-object';
 export type PostWithAuthorProps = {
   postId: UniqueEntityID;
   authorId: UniqueEntityID;
+  isNew: boolean;
   slug: string;
   title: string;
   content: string;
   excerpt: string;
   points: number;
   author: string;
-  publishedAt: Date;
   createdAt: Date;
   updatedAt?: Date | null;
 };
@@ -22,6 +22,10 @@ export class PostWithAuthor extends ValueObject<PostWithAuthorProps> {
 
   get authorId() {
     return this.props.authorId;
+  }
+
+  get isNew() {
+    return this.props.isNew;
   }
 
   get slug() {
@@ -46,10 +50,6 @@ export class PostWithAuthor extends ValueObject<PostWithAuthorProps> {
 
   get author() {
     return this.props.author;
-  }
-
-  get publishedAt() {
-    return this.props.publishedAt;
   }
 
   get createdAt() {

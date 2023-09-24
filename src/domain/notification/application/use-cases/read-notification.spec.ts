@@ -1,5 +1,6 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error';
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error';
 
 import { ReadNotificationUseCase } from './read-notification';
 
@@ -45,5 +46,15 @@ describe('Send Notification', () => {
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(NotAllowedError);
+  });
+
+  it('should not be able to read a non-existing notification', async () => {
+    const result = await sut.execute({
+      notificationId: 'notification-1',
+      recipientId: 'recipient-2',
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
   });
 });

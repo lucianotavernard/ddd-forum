@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Either, left, right } from '@/core/either';
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error';
 
-import { Post } from '@/domain/forum/enterprise/entities/post';
+import { PostWithAuthor } from '@/domain/forum/enterprise/entities/value-objects/post-with-author';
 import { PostsRepository } from '@/domain/forum/application/repositories/posts-repository';
 
 type GetPostBySlugUseCaseRequest = {
@@ -13,7 +13,7 @@ type GetPostBySlugUseCaseRequest = {
 type GetPostBySlugUseCaseResponse = Either<
   ResourceNotFoundError,
   {
-    post: Post;
+    post: PostWithAuthor;
   }
 >;
 

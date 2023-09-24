@@ -1,10 +1,10 @@
 import { AuthenticateAuthorUseCase } from './authenticate-author';
+import { WrongCredentialsError } from './errors/wrong-credentials-error';
 
 import { InMemoryAuthorsRepository } from 'test/repositories/in-memory-authors-repository';
 import { FakeEncrypter } from 'test/providers/fake-encrypter';
 import { FakeHasher } from 'test/providers/fake-hasher';
 import { makeAuthor } from 'test/factories/make-author';
-import { WrongCredentialsError } from './errors/wrong-credentials-error';
 
 let inMemoryAuthorsRepository: InMemoryAuthorsRepository;
 let fakeHasher: FakeHasher;

@@ -39,17 +39,17 @@ export class Comment extends AggregateRoot<CommentProps> {
     this.touch();
   }
 
-  get votes() {
-    return this.props.votes;
+  get points() {
+    return this.props.points;
   }
 
-  set votes(votes: CommentVoteList) {
-    this.props.votes = votes;
+  set points(points: number) {
+    this.props.points = points;
     this.touch();
   }
 
-  get points() {
-    return this.props.points;
+  get votes() {
+    return this.props.votes;
   }
 
   get createdAt() {

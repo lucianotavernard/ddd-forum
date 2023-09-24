@@ -14,7 +14,6 @@ export type PostProps = {
   content: string;
   points: number;
   votes: PostVoteList;
-  publishedAt: Date;
   createdAt: Date;
   updatedAt?: Date;
 };
@@ -69,10 +68,6 @@ export class Post extends AggregateRoot<PostProps> {
     return this.props.updatedAt;
   }
 
-  get publishedAt() {
-    return this.props.publishedAt;
-  }
-
   get isNew(): boolean {
     return dayjs().diff(this.createdAt, 'days') <= 3;
   }
@@ -86,10 +81,7 @@ export class Post extends AggregateRoot<PostProps> {
   }
 
   static create(
-    props: Optional<
-      PostProps,
-      'createdAt' | 'slug' | 'points' | 'votes' | 'publishedAt'
-    >,
+    props: Optional<PostProps, 'createdAt' | 'slug' | 'points' | 'votes'>,
     id?: UniqueEntityID,
   ) {
     const post = new Post(
@@ -99,7 +91,6 @@ export class Post extends AggregateRoot<PostProps> {
         points: props.points ?? 0,
         votes: props.votes ?? new PostVoteList(),
         createdAt: props.createdAt ?? new Date(),
-        publishedAt: props.publishedAt ?? new Date(),
       },
       id,
     );

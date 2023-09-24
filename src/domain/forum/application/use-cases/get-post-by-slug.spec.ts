@@ -6,6 +6,7 @@ import { Slug } from '@/domain/forum/enterprise/entities/value-objects/slug';
 import { InMemoryPostsRepository } from 'test/repositories/in-memory-posts-repository';
 import { InMemoryPostVotesRepository } from 'test/repositories/in-memory-post-votes-repository';
 import { InMemoryAuthorsRepository } from 'test/repositories/in-memory-authors-repository';
+import { makeAuthor } from 'test/factories/make-author';
 import { makePost } from 'test/factories/make-post';
 
 let inMemoryPostsRepository: InMemoryPostsRepository;
@@ -27,9 +28,15 @@ describe('Get Post By Slug', () => {
   });
 
   it('should be able to get a post by slug', async () => {
-    const newPost = makePost({ slug: Slug.create('example-post') });
+    const author = makeAuthor();
 
-    await inMemoryPostsRepository.create(newPost);
+    const post = makePost({
+      authorId: author.id,
+      slug: Slug.create('example-post'),
+    });
+
+    await inMemoryAuthorsRepository.create(author);
+    await inMemoryPostsRepository.create(post);
 
     const result = await sut.execute({
       slug: 'example-post',
@@ -37,11 +44,17 @@ describe('Get Post By Slug', () => {
 
     expect(result.value).toMatchObject({
       post: expect.objectContaining({
-        isNew: newPost.isNew,
-        title: newPost.title,
-        excerpt: newPost.excerpt,
-        updatedAt: newPost.updatedAt,
-        publishedAt: newPost.publishedAt,
+        isNew: post.isNew,
+        slug: post.slug.value,
+        title: post.title,
+        author: author.name,
+        points: post.points,
+        excerpt: post.excerpt,
+        content: post.content,
+        createdAt: post.createdAt,
+        updatedAt: post.updatedAt,
+        authorId: post.authorId,
+        postId: post.id,
       }),
     });
   });

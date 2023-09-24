@@ -5,17 +5,17 @@ import { Vote, VoteProps, VoteType } from './vote';
 
 export type CommentVoteType = VoteType;
 
-export interface CommentProps extends VoteProps {
+export interface CommentVoteProps extends VoteProps {
   commentId: UniqueEntityID;
 }
 
-export class CommentVote extends Vote<CommentProps> {
+export class CommentVote extends Vote<CommentVoteProps> {
   get commentId() {
     return this.props.commentId;
   }
 
   static create(
-    props: Optional<CommentProps, 'createdAt'>,
+    props: Optional<CommentVoteProps, 'createdAt'>,
     id?: UniqueEntityID,
   ) {
     const vote = new CommentVote(
@@ -30,7 +30,7 @@ export class CommentVote extends Vote<CommentProps> {
   }
 
   static createUpvote(
-    props: Optional<Omit<CommentProps, 'type'>, 'createdAt'>,
+    props: Optional<Omit<CommentVoteProps, 'type'>, 'createdAt'>,
     id?: UniqueEntityID,
   ) {
     const vote = new CommentVote(
@@ -46,7 +46,7 @@ export class CommentVote extends Vote<CommentProps> {
   }
 
   static createDownvote(
-    props: Optional<Omit<CommentProps, 'type'>, 'createdAt'>,
+    props: Optional<Omit<CommentVoteProps, 'type'>, 'createdAt'>,
     id?: UniqueEntityID,
   ) {
     const vote = new CommentVote(

@@ -4,7 +4,7 @@ import { Post } from '@/domain/forum/enterprise/entities/post';
 
 export abstract class PostsRepository {
   abstract findById(id: string): Promise<Post | null>;
-  abstract findBySlug(slug: string): Promise<Post | null>;
+  abstract findBySlug(slug: string): Promise<PostWithAuthor | null>;
   abstract findManyRecent(params: PaginationParams): Promise<PostWithAuthor[]>;
   abstract findManyPopular(params: PaginationParams): Promise<PostWithAuthor[]>;
   abstract save(post: Post): Promise<void>;

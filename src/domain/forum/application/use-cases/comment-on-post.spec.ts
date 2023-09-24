@@ -52,6 +52,7 @@ describe('Comment on Post', () => {
       expect.objectContaining({
         createdAt: expect.any(Date),
         updatedAt: undefined,
+        commentId: undefined,
         content: 'Comment test',
         points: 0,
       }),
