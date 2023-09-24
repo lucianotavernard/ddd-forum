@@ -11,7 +11,6 @@ export class PostWithAuthorPresenter {
       content: postWithAuthor.content,
       createdAt: postWithAuthor.createdAt,
       updatedAt: postWithAuthor.updatedAt,
-      publishedAt: postWithAuthor.publishedAt,
     };
   }
 }

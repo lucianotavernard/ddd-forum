@@ -15,6 +15,10 @@ export abstract class Vote<Props extends VoteProps> extends Entity<Props> {
     return this.props.authorId;
   }
 
+  get type() {
+    return this.props.type;
+  }
+
   get createdAt() {
     return this.props.createdAt;
   }

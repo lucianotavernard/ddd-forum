@@ -43,9 +43,9 @@ export class PrismaCommentVotesRepository implements CommentVotesRepository {
       return;
     }
 
-    const data = PrismaCommentVoteMapper.toPrismaUpdateMany(votes);
+    const data = PrismaCommentVoteMapper.toPrismaCreateMany(votes);
 
-    await this.prisma.vote.updateMany(data);
+    await this.prisma.vote.createMany(data);
   }
 
   async deleteMany(votes: CommentVote[]): Promise<void> {

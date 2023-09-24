@@ -31,18 +31,12 @@ export class PrismaCommentVoteMapper {
     };
   }
 
-  static toPrismaUpdateMany(votes: CommentVote[]): Prisma.VoteUpdateManyArgs {
-    const voteIds = votes.map((vote) => vote.id.toString());
+  static toPrismaCreateMany(votes: CommentVote[]): Prisma.VoteCreateManyArgs {
+    const data = votes.map(this.toPrisma);
 
     return {
-      where: {
-        id: {
-          in: voteIds,
-        },
-      },
-      data: {
-        commentId: votes[0].commentId.toString(),
-      },
+      data,
+      skipDuplicates: true,
     };
   }
 }

@@ -47,6 +47,8 @@ describe('Upvote on post (E2E)', () => {
 
     const postId = post.id.toString();
 
+    console.log(postId);
+
     const response = await request(app.getHttpServer())
       .post(`/posts/${postId}/upvote`)
       .set('Authorization', `Bearer ${accessToken}`)
@@ -56,9 +58,11 @@ describe('Upvote on post (E2E)', () => {
 
     const upvoteOnDatabase = await prisma.vote.findFirst({
       where: {
-        type: 'UPVOTE',
+        postId: postId,
       },
     });
+
+    console.log(upvoteOnDatabase);
 
     expect(upvoteOnDatabase).toBeTruthy();
   });
