@@ -1,14 +1,14 @@
+import dayjs from 'dayjs';
+
 import { UniqueEntityID } from '@/core/entities/unique-entity-id';
 import { ValueObject } from '@/core/entities/value-object';
 
 export type PostWithAuthorProps = {
   postId: UniqueEntityID;
   authorId: UniqueEntityID;
-  isNew: boolean;
   slug: string;
   title: string;
   content: string;
-  excerpt: string;
   points: number;
   author: string;
   createdAt: Date;
@@ -25,7 +25,7 @@ export class PostWithAuthor extends ValueObject<PostWithAuthorProps> {
   }
 
   get isNew() {
-    return this.props.isNew;
+    return dayjs().diff(this.createdAt, 'days') <= 3;
   }
 
   get slug() {
@@ -41,7 +41,7 @@ export class PostWithAuthor extends ValueObject<PostWithAuthorProps> {
   }
 
   get excerpt() {
-    return this.props.excerpt;
+    return this.content.substring(0, 120).trimEnd().concat('...');
   }
 
   get points() {

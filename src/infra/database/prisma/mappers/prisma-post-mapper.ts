@@ -15,7 +15,6 @@ export class PrismaPostMapper {
         points: raw.points ?? 0,
         createdAt: raw.createdAt,
         updatedAt: raw.updatedAt,
-        publishedAt: raw.publishedAt ?? null,
       },
       new UniqueEntityID(raw.id),
     );
@@ -31,7 +30,6 @@ export class PrismaPostMapper {
       points: post.points,
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
-      publishedAt: post.publishedAt,
     };
   }
 }

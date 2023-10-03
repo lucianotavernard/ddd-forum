@@ -3,8 +3,8 @@ import { Module } from '@nestjs/common';
 import { DatabaseModule } from '../database/database.module';
 import { ProviderModule } from '../provider/provider.module';
 
-import { PostService } from '@/domain/forum/application/services/post-service';
 import { CommentService } from '@/domain/forum/application/services/comment-service';
+import { PostService } from '@/domain/forum/application/services/post-service';
 
 import { AuthenticateAuthorUseCase } from '@/domain/forum/application/use-cases/authenticate-author';
 import { CommentOnPostUseCase } from '@/domain/forum/application/use-cases/comment-on-post';
@@ -22,6 +22,8 @@ import { GetPostBySlugUseCase } from '@/domain/forum/application/use-cases/get-p
 import { RegisterAuthorUseCase } from '@/domain/forum/application/use-cases/register-author';
 import { UpvoteOnCommentUseCase } from '@/domain/forum/application/use-cases/upvote-on-comment';
 import { UpvoteOnPostUseCase } from '@/domain/forum/application/use-cases/upvote-on-post';
+import { FetchRecentNotificationsUseCase } from '@/domain/notification/application/use-cases/fetch-recent-notifications';
+import { ReadNotificationUseCase } from '@/domain/notification/application/use-cases/read-notification';
 
 import { AuthenticateController } from './controllers/authentication.controller';
 import { CommentOnPostController } from './controllers/comment-on-post.controller';
@@ -35,8 +37,10 @@ import { EditCommentOnPostController } from './controllers/edit-comment.controll
 import { EditPostController } from './controllers/edit-post.controller';
 import { FetchPostCommentsController } from './controllers/fetch-comments-from-post.controller';
 import { FetchPopularPostsController } from './controllers/fetch-popular-posts.controller';
+import { FetchRecentNotificationsController } from './controllers/fetch-recent-notifications.controller';
 import { FetchRecentPostsController } from './controllers/fetch-recent-posts.controller';
 import { GetPostBySlugController } from './controllers/get-post-by-slug.controller';
+import { ReadNotificationController } from './controllers/read-notification.controller';
 import { UpvoteOnCommentController } from './controllers/upvote-on-comment.controller';
 import { UpvoteOnPostController } from './controllers/upvote-on-post.controller';
 
@@ -58,6 +62,8 @@ import { UpvoteOnPostController } from './controllers/upvote-on-post.controller'
     UpvoteOnCommentController,
     DownvoteOnPostController,
     DownvoteOnCommentController,
+    ReadNotificationController,
+    FetchRecentNotificationsController,
     GetPostBySlugController,
   ],
   providers: [
@@ -79,6 +85,8 @@ import { UpvoteOnPostController } from './controllers/upvote-on-post.controller'
     UpvoteOnCommentUseCase,
     DownvoteOnPostUseCase,
     DownvoteOnCommentUseCase,
+    ReadNotificationUseCase,
+    FetchRecentNotificationsUseCase,
   ],
 })
 export class HttpModule {}

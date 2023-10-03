@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PaginationParams } from '@/core/repositories/pagination-params';
+import { DomainEvents } from '@/core/events/domain-events';
 
 import { CommentVotesRepository } from '@/domain/forum/application/repositories/comment-votes-repository';
 import { CommentsRepository } from '@/domain/forum/application/repositories/comments-repository';
@@ -80,6 +81,8 @@ export class PrismaCommentsRepository implements CommentsRepository {
       this.commentVotesRepository.createMany(comment.votes.getNewItems()),
       this.commentVotesRepository.deleteMany(comment.votes.getRemovedItems()),
     ]);
+
+    DomainEvents.dispatchEventsForAggregate(comment.id);
   }
 
   async create(comment: Comment): Promise<void> {
@@ -88,6 +91,8 @@ export class PrismaCommentsRepository implements CommentsRepository {
     await this.prisma.comment.create({
       data,
     });
+
+    DomainEvents.dispatchEventsForAggregate(comment.id);
   }
 
   async delete(comment: Comment): Promise<void> {

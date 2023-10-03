@@ -14,6 +14,9 @@ import { CommentsRepository } from '@/domain/forum/application/repositories/comm
 import { PrismaCommentVotesRepository } from './prisma/repositories/prisma-comment-votes-repository';
 import { CommentVotesRepository } from '@/domain/forum/application/repositories/comment-votes-repository';
 
+import { PrismaNotificationsRepository } from './prisma/repositories/prisma-notifications-repository';
+import { NotificationsRepository } from '@/domain/notification/application/repositories/notifications-repository';
+
 import { PrismaAuthorsRepository } from './prisma/repositories/prisma-authors-repository';
 import { AuthorsRepository } from '@/domain/forum/application/repositories/authors-repository';
 
@@ -40,6 +43,10 @@ import { AuthorsRepository } from '@/domain/forum/application/repositories/autho
       provide: AuthorsRepository,
       useClass: PrismaAuthorsRepository,
     },
+    {
+      provide: NotificationsRepository,
+      useClass: PrismaNotificationsRepository,
+    },
   ],
   exports: [
     PrismaService,
@@ -47,6 +54,7 @@ import { AuthorsRepository } from '@/domain/forum/application/repositories/autho
     CommentsRepository,
     PostVotesRepository,
     CommentVotesRepository,
+    NotificationsRepository,
     AuthorsRepository,
   ],
 })
