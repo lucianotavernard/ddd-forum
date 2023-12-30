@@ -4,23 +4,17 @@ import { Either, left, right } from '@/core/either';
 
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error';
 
-import { PostVote } from '@/domain/forum/enterprise/entities/post-vote';
-import { PostService } from '@/domain/forum/application/services/post-service';
-import { PostsRepository } from '@/domain/forum/application/repositories/posts-repository';
-import { PostVotesRepository } from '@/domain/forum/application/repositories/post-votes-repository';
 import { AuthorsRepository } from '@/domain/forum/application/repositories/authors-repository';
+import { PostVotesRepository } from '@/domain/forum/application/repositories/post-votes-repository';
+import { PostsRepository } from '@/domain/forum/application/repositories/posts-repository';
+import { PostService } from '@/domain/forum/application/services/post-service';
 
 type DownvoteOnPostUseCaseRequest = {
   postId: string;
   authorId: string;
 };
 
-type DownvoteOnPostUseCaseResponse = Either<
-  ResourceNotFoundError,
-  {
-    vote: PostVote;
-  }
->;
+type DownvoteOnPostUseCaseResponse = Either<ResourceNotFoundError, undefined>;
 
 @Injectable()
 export class DownvoteOnPostUseCase {

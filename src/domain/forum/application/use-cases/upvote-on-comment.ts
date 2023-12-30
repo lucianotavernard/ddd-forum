@@ -4,23 +4,17 @@ import { Either, left, right } from '@/core/either';
 
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error';
 
-import { CommentVote } from '@/domain/forum/enterprise/entities/comment-vote';
-import { CommentService } from '@/domain/forum/application/services/comment-service';
-import { CommentsRepository } from '@/domain/forum/application/repositories/comments-repository';
-import { CommentVotesRepository } from '@/domain/forum/application/repositories/comment-votes-repository';
 import { AuthorsRepository } from '@/domain/forum/application/repositories/authors-repository';
+import { CommentVotesRepository } from '@/domain/forum/application/repositories/comment-votes-repository';
+import { CommentsRepository } from '@/domain/forum/application/repositories/comments-repository';
+import { CommentService } from '@/domain/forum/application/services/comment-service';
 
 type UpvoteOnCommentUseCaseRequest = {
   commentId: string;
   authorId: string;
 };
 
-type UpvoteOnCommentUseCaseResponse = Either<
-  ResourceNotFoundError,
-  {
-    vote: CommentVote;
-  }
->;
+type UpvoteOnCommentUseCaseResponse = Either<ResourceNotFoundError, undefined>;
 
 @Injectable()
 export class UpvoteOnCommentUseCase {

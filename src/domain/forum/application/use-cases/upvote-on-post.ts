@@ -8,19 +8,13 @@ import { AuthorsRepository } from '@/domain/forum/application/repositories/autho
 import { PostVotesRepository } from '@/domain/forum/application/repositories/post-votes-repository';
 import { PostsRepository } from '@/domain/forum/application/repositories/posts-repository';
 import { PostService } from '@/domain/forum/application/services/post-service';
-import { PostVote } from '@/domain/forum/enterprise/entities/post-vote';
 
 type UpvoteOnPostUseCaseRequest = {
   postId: string;
   authorId: string;
 };
 
-type UpvoteOnPostUseCaseResponse = Either<
-  ResourceNotFoundError,
-  {
-    vote: PostVote;
-  }
->;
+type UpvoteOnPostUseCaseResponse = Either<ResourceNotFoundError, undefined>;
 
 @Injectable()
 export class UpvoteOnPostUseCase {
